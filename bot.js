@@ -8,13 +8,20 @@ http.createServer((req, res) => {
 
 function startBot() {
   const bot = mineflayer.createBot({
-    host: 'driftfish.aternos.host', // استخدام IP الديناميكي الحقيقي
-    port: 11025,                   // المنفذ الظاهر في الصورة
+    host: 'driftfish.aternos.host',
+    port: 11025,
     username: 'AFK_Bot_247'
   });
 
   bot.on('spawn', () => {
     console.log('Bot joined successfully!');
+    
+    // جعل البوت يدور ويكرر القفز للحفاظ على التواجد دون طرد AFK
+    setInterval(() => {
+      bot.setControlState('jump', true);
+      setTimeout(() => bot.setControlState('jump', false), 500);
+      bot.look(bot.entity.yaw + 0.5, bot.entity.pitch, true);
+    }, 4000);
   });
 
   bot.on('end', () => {
