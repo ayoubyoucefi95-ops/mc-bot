@@ -1,27 +1,36 @@
 const mineflayer = require('mineflayer');
-const http = require('http');
+const express = require('express');
 
-http.createServer((req, res) => {
-  res.write("Bot is running 24/7!");
-  res.end();
-}).listen(process.env.PORT || 3000);
+// 1. تشغيل سيرفر وهمي باش Render ما يطفيش الخدمة
+const app = express();
+const PORT = process.env.PORT || 10000;
 
+app.get('/', (req, res) => {
+  res.send('AFK Bot is alive!');
+});
+
+app.listen(PORT, () => {
+  console.log(`Web server running on port ${PORT}`);
+});
+
+// 2. إعدادات البوت بالـ IP والـ Port الخاص بسيرفرك
 function startBot() {
   const bot = mineflayer.createBot({
-    host: 'driftfish.aternos.host',
-    port: 11025,
-    username: 'AFK_Bot_247'
+    host: 'driftfish.aternos.host', // الـ IP الديناميكي
+    port: 11025,                   // الـ Port الخاص بسيرفرك
+    username: 'AFK_Bot_247',
+    checkTimeoutInterval: 60 * 1000, // 60 ثانية منعاً للفصل
   });
 
   bot.on('spawn', () => {
     console.log('Bot joined successfully!');
-    
-    // جعل البوت يدور ويكرر القفز للحفاظ على التواجد دون طرد AFK
+    // قفز مستمر كل ثانية باش يبقى البوت نشيط وما يتحسبش AFK
     setInterval(() => {
       bot.setControlState('jump', true);
-      setTimeout(() => bot.setControlState('jump', false), 500);
-      bot.look(bot.entity.yaw + 0.5, bot.entity.pitch, true);
-    }, 4000);
+      setTimeout(() => {
+        bot.setControlState('jump', false);
+      }, 500);
+    }, 1000);
   });
 
   bot.on('end', () => {
@@ -29,7 +38,9 @@ function startBot() {
     setTimeout(startBot, 5000);
   });
 
-  bot.on('error', err => console.log('Error:', err));
+  bot.on('error', (err) => {
+    console.log('Bot error:', err);
+  });
 }
 
 startBot();
