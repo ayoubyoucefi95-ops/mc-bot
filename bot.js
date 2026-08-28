@@ -1,31 +1,34 @@
+const express = require('express');
 const mineflayer = require('mineflayer');
 
-function startBot() {
-  const bot = mineflayer.createBot({
-    host: 'driftfish.aternos.host',
-    port: 11025,
-    username: 'AFK_Bot_247',
-    checkTimeoutInterval: 60 * 1000,
-  });
+const app = express();
+const port = process.env.PORT || 3000;
 
-  bot.on('spawn', () => {
-    console.log('Bot joined successfully!');
-    setInterval(() => {
-      bot.setControlState('jump', true);
-      setTimeout(() => {
-        bot.setControlState('jump', false);
-      }, 500);
-    }, 1000);
-  });
+app.get('/', (req, res) => {
+  res.send('Bot is running!');
+});
 
-  bot.on('end', () => {
-    console.log('Bot disconnected, reconnecting in 5s...');
-    setTimeout(startBot, 5000);
-  });
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
-  bot.on('error', (err) => {
-    console.log('Bot error:', err);
-  });
-}
+const bot = mineflayer.createBot({
+  host: 'driftfish.aternos.host',
+  port: 11025,
+  username: 'AFK_Bot'
+});
 
-startBot();
+bot.on('login', () => {
+  console.log('Bot joined successfully!');
+});
+
+bot.on('error', (err) => {
+  console.log('Bot error:', err);
+});
+
+bot.on('end', () => {
+  console.log('Bot disconnected, reconnecting in 5s...');
+  setTimeout(() => {
+    process.exit(1);
+  }, 5000);
+});
