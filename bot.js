@@ -1,17 +1,18 @@
-const express = require('express');
+const http = require('http');
 const mineflayer = require('mineflayer');
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-  res.send('Bot is running!');
+// خادم ويب بسيط باش UptimeRobot يلقى وش يراقب
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Bot is online!');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Web server listening on port ${PORT}`);
 });
 
+// إعدادات البوت والسيرفر
 const bot = mineflayer.createBot({
   host: 'driftfish.aternos.host',
   port: 11025,
