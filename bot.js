@@ -8,9 +8,10 @@ http.createServer((req, res) => {
 
 function startBot() {
   const bot = mineflayer.createBot({
-    host: 'AYOUB_andda7man.aternos.me', 
-    port: 11025,
-    username: 'AFK_Bot_247'
+    host: 'AYOUB_andda7man.aternos.me', // عنوان السيرفر
+    // تم حذف port: 11025 لأن هذا البورت خاص بـ Bedrock وليس Java
+    username: 'AFK_Bot_247',
+    version: false // يدع اختيار النسخة تلقائياً
   });
 
   bot.on('spawn', () => {
