@@ -1,4 +1,10 @@
 const mineflayer = require('mineflayer');
+const http = require('http');
+
+http.createServer((req, res) => {
+  res.write("Bot is running 24/7!");
+  res.end();
+}).listen(process.env.PORT || 3000);
 
 function startBot() {
   const bot = mineflayer.createBot({
